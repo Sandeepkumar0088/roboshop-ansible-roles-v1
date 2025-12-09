@@ -17,7 +17,6 @@
     path: /app
     state: directory
 
-
 - name: download nd extract file
   ansible.builtin.unarchive:
     src: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
@@ -32,14 +31,6 @@
   ansible.builtin.copy:
     src: mongo.repo
     dest: /etc/yum.repos.d/mongo.repo
-
-
-
-#    - name: load master data
-#      community.mongodb.mongodb_shell:
-#        file: /app/db/master-data.js
-#        login_host: mongodb-dev.sandeepkumar0088.online
-#        idempotent: yes
 
 - name: install mongodb shell
   ansible.builtin.dnf:
