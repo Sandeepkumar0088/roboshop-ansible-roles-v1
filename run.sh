@@ -1,0 +1,1 @@
+ansible-playbook -i frontend-dev.sandeepkumar0088.online, frontend.yml -e ansible_user=ec2-user -e ansible_password=DevOps321
