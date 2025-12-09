@@ -1,0 +1,5 @@
+- name: dispatch setup
+  hosts: all
+  become: true
+  roles:
+    - dispatch
