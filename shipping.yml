@@ -1,0 +1,5 @@
+- name: shipping setup
+  hosts: all
+  become: true
+  roles:
+    - shipping

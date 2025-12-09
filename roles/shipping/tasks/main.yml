@@ -1,0 +1,79 @@
+- name: install maven
+  ansible.builtin.dnf:
+    name: maven
+    state: present
+- name: add roboshop user
+  ansible.builtin.user:
+    name: roboshop
+- name: remove app directory
+  ansible.builtin.file:
+    path: /app
+    state: absent
+- name: add app directory
+  ansible.builtin.file:
+    path: /app
+    state: directory
+- name: download nd extract the file
+  ansible.builtin.unarchive:
+    src: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+    dest: /app
+    remote_src: yes
+
+- name: clean package
+  ansible.builtin.shell: mvn clean package ; mv target/shipping-1.0.jar shipping.jar
+  args:
+    chdir: cd /app
+
+- name: copy shipping service file
+  ansible.builtin.copy:
+    src: shipping.service
+    dest: /etc/systemd/system/shipping.service
+
+- name: install mysql
+  ansible.builtin.dnf:
+    name: mysql
+    state: present
+
+- name: load schema
+  ansible.builtin.shell: mysql -h mysql-dev.sandeepkumar0088.online -uroot -pRoboShop@1 < /app/db/schema.sql
+
+- name: create app user
+  ansible.builtin.shell: mysql -h mysql-dev.sandeepkumar0088.online -uroot -pRoboShop@1 < /app/db/schema.sql
+
+- name: load master data
+  ansible.builtin.shell: mysql -h mysql-dev.sandeepkumar0088.online -uroot -pRoboShop@1 < /app/db/schema.sql
+
+#    - name: load schema
+#      community.mysql.mysql_db:
+#        state: import
+#        name: all
+#        target: /app/db/schema.sql
+#        login_user: root
+#        login_password: RoboShop@1
+#        login_host: mysql-dev.sandeepkumar0088.online
+#
+#    - name: load users
+#      community.mysql.mysql_db:
+#        state: import
+#        name: all
+#        target: /app/db/app-user.sql
+#        login_user: root
+#        login_password: RoboShop@1
+#        login_host: mysql-dev.sandeepkumar0088.online
+#
+#    - name: load master data
+#      community.mysql.mysql_db:
+#        state: import
+#        name: all
+#        target: /app/db/master-data.sql
+#        login_user: root
+#        login_password: RoboShop@1
+#        login_host: mysql-dev.sandeepkumar0088.online
+
+#
+- name: restart nd reload
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: shipping
+    enabled: true
+    daemon_reload: true
