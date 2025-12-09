@@ -1,0 +1,5 @@
+- name: cart setup
+  hosts: all
+  become: true
+  roles:
+    - cart
