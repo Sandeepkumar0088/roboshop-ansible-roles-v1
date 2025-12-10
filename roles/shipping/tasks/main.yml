@@ -20,12 +20,9 @@
     remote_src: yes
 
 - name: clean package
-  ansible.builtin.shell: cd /app ; mvn clean package ; mv target/shipping-1.0.jar shipping.jar
-
-- name: copy shipping service file
-  ansible.builtin.copy:
-    src: shipping.service
-    dest: /etc/systemd/system/shipping.service
+  ansible.builtin.shell: mvn clean package ; mv target/shipping-1.0.jar shipping.jar
+  args:
+    chdir: /app/
 
 - name: install mysql
   ansible.builtin.dnf:
@@ -40,6 +37,11 @@
 
 - name: load master data
   ansible.builtin.shell: mysql -h mysql-dev.sandeepkumar0088.online -uroot -pRoboShop@1 < /app/db/schema.sql
+
+- name: copy shipping service file
+  ansible.builtin.copy:
+    src: shipping.service
+    dest: /etc/systemd/system/shipping.service
 
 - name: restart nd reload
   ansible.builtin.systemd_service:
