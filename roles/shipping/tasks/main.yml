@@ -1,6 +1,6 @@
 - name: install maven
   ansible.builtin.dnf:
-    name: maven
+    name: 'maven'
     state: present
 - name: add roboshop user
   ansible.builtin.user:
