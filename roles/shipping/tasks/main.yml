@@ -20,9 +20,7 @@
     remote_src: yes
 
 - name: clean package
-  ansible.builtin.shell: mvn clean package ; mv target/shipping-1.0.jar shipping.jar
-  args:
-    chdir: cd /app
+  ansible.builtin.shell: cd /app ; mvn clean package ; mv target/shipping-1.0.jar shipping.jar
 
 - name: copy shipping service file
   ansible.builtin.copy:
